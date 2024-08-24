@@ -22,5 +22,11 @@ public class ThymLeafLearningController {
             return "login";
     }
 
+    @PostMapping("/logout")
+    public String getLogout(Model module){
+        module.addAttribute("creds", new Creds());
+        return "login";
+    }
+
 }
 
