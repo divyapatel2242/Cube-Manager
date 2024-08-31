@@ -1,5 +1,6 @@
 package com.cube.manage.crm.service;
 
+import com.cube.manage.crm.request.PredictInputData;
 import org.apache.spark.ml.classification.RandomForestClassificationModel;
 import org.apache.spark.ml.classification.RandomForestClassifier;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
@@ -7,6 +8,9 @@ import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.Metadata;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Arrays;
@@ -22,6 +26,8 @@ public class TitanicDataSetTestingMLService {
     //Testing Service for titanic DataSet
     @Autowired
     private SparkSession sparkSession;
+
+    private RandomForestClassificationModel model;
 
     public Dataset<Row> loadTrainedData() {
         String path = "C:\\Users\\divya\\Downloads\\titanic\\train.csv";
@@ -97,10 +103,11 @@ public class TitanicDataSetTestingMLService {
         RandomForestClassifier estimator = new RandomForestClassifier()
                 .setLabelCol("Survived").setFeaturesCol("features").setMaxDepth(5);
 
-        RandomForestClassificationModel model = estimator.fit(trainDataSet);
+        model = estimator.fit(trainDataSet);
 
         //make Prediction dataset which will predict
         Dataset<Row> prediction = model.transform(testDataSet);
+
         prediction.printSchema();
         prediction.show();
 
@@ -113,6 +120,45 @@ public class TitanicDataSetTestingMLService {
 
         System.out.println("Accuracy of Model : " + accuracy);
 
+
+    }
+
+    public Double predictInputData(PredictInputData predictedData){
+        Dataset<Row> data = sparkSession.createDataFrame(Arrays.asList(
+                RowFactory.create(predictedData.getPclass(),
+                        predictedData.getAge(),
+                        predictedData.getFare(),
+                        predictedData.getGender(),
+                        predictedData.getBoarded())
+        ), new StructType(new StructField[]{
+                new StructField("Pclass", DataTypes.DoubleType, false, Metadata.empty()),
+                new StructField("Age", DataTypes.DoubleType, false, Metadata.empty()),
+                new StructField("Fare", DataTypes.DoubleType, false, Metadata.empty()),
+                new StructField("Gender", DataTypes.StringType, false, Metadata.empty()),
+                new StructField("Boarded", DataTypes.StringType, false, Metadata.empty())
+        }));
+
+        data.show();
+
+        StringIndexer genderIndexer = new StringIndexer().setInputCol("Gender").setOutputCol("GenderIndex").setHandleInvalid("keep");
+        StringIndexer boardedIndexer = new StringIndexer().setInputCol("Boarded").setOutputCol("BoardedIndex").setHandleInvalid("keep");
+
+        Dataset<Row> genderData = genderIndexer.fit(data).transform(data);
+        Dataset<Row> finalData = boardedIndexer.fit(genderData).transform(genderData);
+
+        finalData.drop("Gender","Boarded");
+
+        finalData.show();
+
+        VectorAssembler vectorAssembler = new VectorAssembler()
+                .setInputCols(new String[]{"Pclass","Age","Fare","GenderIndex","BoardedIndex"}).setOutputCol("features");
+        Dataset<Row> finalFetureData = vectorAssembler.transform(finalData);
+        finalFetureData.show();
+
+        Dataset<Row> prediction = model.transform(finalFetureData);
+
+        List<Row> response = prediction.select("prediction").collectAsList();
+        return response.get(0).getDouble(0);
 
     }
 
