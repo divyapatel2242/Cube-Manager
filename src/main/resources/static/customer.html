@@ -1,0 +1,149 @@
+<!-- customer.html -->
+<div class="customer-form">
+    <h2>Customer Details</h2>
+    <form id="customerForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" placeholder="Enter email">
+            </div>
+
+            <div class="form-group">
+                <label for="customerId">Customer ID:</label>
+                <input type="text" id="customerId" placeholder="Enter customer ID">
+            </div>
+        </div>
+
+        <button type="button" onclick="searchCustomer()">Search</button>
+    </form>
+</div>
+
+<script>
+    function searchCustomer() {
+        const email = document.getElementById('email').value.trim();
+        const customerId = document.getElementById('customerId').value.trim();
+
+        if (email || customerId) {
+            // Simulate fetching customer details (you might replace this with an actual API call)
+            const customerData = {
+                name: "John Doe",
+                email: email || "john.doe@example.com",
+                customerId: customerId || "12345",
+                phone: "+1 123 456 7890",
+                address: "123 Main St, Anytown, USA"
+            };
+
+            // Check if the customer data is set correctly
+            console.log('Customer Data:', customerData);
+
+            // Store customer data in session storage
+            sessionStorage.setItem('customerData', JSON.stringify(customerData));
+
+            // Redirect to the customer detail page
+            window.location.href = 'customer-detail.html';
+        } else {
+            alert('Please enter either an Email or Customer ID to search.');
+        }
+    }
+</script>
+
+<style>
+    /* Same styles as provided earlier */
+    .customer-form {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+        margin-top: 2rem;
+    }
+
+    .customer-form h2 {
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        color: #333;
+        text-align: center;
+    }
+
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem; /* Space between the fields */
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        flex: 1; /* Makes each form group take equal space */
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    }
+
+    .customer-form button {
+        width: 100%;
+        background-color: #007bff;
+        color: #fff;
+        padding: 0.8rem 1.2rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .customer-form button:hover {
+        background-color: #0056b3;
+    }
+
+    .customer-form button:active {
+        background-color: #004494;
+    }
+
+    .customer-form button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+        .customer-form {
+            padding: 1.5rem;
+        }
+
+        .form-row {
+            flex-direction: column; /* Stack fields vertically on smaller screens */
+        }
+
+        .customer-form h2 {
+            font-size: 1.3rem;
+        }
+
+        .form-group input {
+            padding: 0.6rem;
+        }
+
+        .customer-form button {
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
