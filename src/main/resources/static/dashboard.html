@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -108,7 +108,6 @@
                 opacity: 1;
             }
         }
-
         /* Product Page Styles */
         .product-options {
             display: flex;
@@ -176,9 +175,9 @@
     </div>
 </div>
 
-<!-- JavaScript Functions -->
+<!-- JavaScript Functions (same as existing) -->
 <script>
-    function loadContent(url) {
+        function loadContent(url) {
         fetch(url)
             .then(response => response.text())
             .then(data => {
@@ -202,25 +201,25 @@
     }
 
     function loadCustomerPage() {
-        const customerPageContent = `
+        const productPageContent = `
             <div class="product-options">
                 <a href="#" onclick="loadContent('/cube-manage/customer/add-customer')">Add Customer</a>
                 <a href="#" onclick="loadContent('/cube-manage/customer/')">Search Customer</a>
-                <a href="#" onclick="loadContent('analyze-customers.html')">Analyze Customers</a>
+                <a href="#" onclick="loadContent('analyze-product.html')">Analyze Customers</a>
             </div>
         `;
-        document.getElementById('content').innerHTML = customerPageContent;
+        document.getElementById('content').innerHTML = productPageContent;
     }
 
     function loadInventoryPage() {
-        const inventoryPageContent = `
+        const productPageContent = `
             <div class="product-options">
-                <a href="#" onclick="loadContent('/cube-manage/inventory/add-inventory')">Add Inventory</a>
-                <a href="#" onclick="loadContent('analyze-inventory.html')">Analyze Inventory</a>
+                <a href="#" onclick="loadContent('/cube-manage/customer/add-customer')">Add Inventory</a>
+                <a href="#" onclick="loadContent('analyze-product.html')">Analyze Inventory</a>
             </div>
         `;
-        document.getElementById('content').innerHTML = inventoryPageContent;
+        document.getElementById('content').innerHTML = productPageContent;
     }
-</script>
+    </script>
 </body>
 </html>

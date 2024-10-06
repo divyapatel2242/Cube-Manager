@@ -21,6 +21,9 @@ public class Inventory {
     @Column(name = "available_quantity")
     private Integer availableQuantity;
 
+    @Column(name = "warehouse")
+    private String warehouse;
+
     @Column(name = "created_date")
     private Date createdDate;
 

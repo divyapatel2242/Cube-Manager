@@ -5,12 +5,10 @@ import com.cube.manage.crm.request.SearchCustomer;
 import com.cube.manage.crm.response.CustomerDataResponse;
 import com.cube.manage.crm.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -26,14 +24,14 @@ public class CustomerController {
         model.addAttribute("searchCustomer", new SearchCustomer());
         return "customer";
     }
-
-    @GetMapping("/customer")
-    public String getCustomer(@ModelAttribute SearchCustomer searchCustomer, Model model){
-        if(Objects.isNull(searchCustomer.getCustomerId()) && Objects.isNull(searchCustomer.getEmail()))
-            return "customer";
+//,
+    @RequestMapping(value = "/get-customer", method = RequestMethod.GET)
+    public String getCustomer(@RequestBody SearchCustomer searchCustomer, Model model){
+//        if(Objects.isNull(searchCustomer.getCustomerId()) && Objects.isNull(searchCustomer.getEmail()))
+//            return "customer";
         CustomerDataResponse customerDataResponse = customerService.fetchCustomersResponseService(searchCustomer);
-        model.addAttribute("customersData",customerDataResponse);
-        return "customerPage";
+        model.addAttribute("customersDataResponse",customerDataResponse);
+        return "customer";
     }
 
     @GetMapping("/add-customer")
@@ -41,9 +39,9 @@ public class CustomerController {
         model.addAttribute("customer", new Customer());
         return "add-customer";
     }
-
+//@ModelAttribute("customer")
     @PostMapping("/add-customer")
-    public String addCustomer(@ModelAttribute("customer") Customer customer, Model model){
+    public String addCustomer(@RequestBody Customer customer, Model model){
         customerService.addCustomerDetails(customer);
         model.addAttribute("message","Customer Details Added Successfully!");
         return "add-customer";

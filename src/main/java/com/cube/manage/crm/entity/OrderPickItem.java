@@ -6,14 +6,17 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "productunit", schema = "cube")
+@Table(name = "orderItem", schema = "cube")
 @Data
-public class Productunit {
+public class OrderPickItem {
 
     @Id
     @GeneratedValue
     @Column(name = "id")
     private Integer id;
+
+    @Column(name = "order_id")
+    private Integer orderId;
 
     @Column(name = "sku")
     private String sku;
@@ -24,14 +27,7 @@ public class Productunit {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "warehouse")
-    private String warehouse;
-
     @Column(name = "created_date")
     private Date createdDate;
-
-    @Column(name = "updated_date")
-    private Date updatedDate;
-
 
 }

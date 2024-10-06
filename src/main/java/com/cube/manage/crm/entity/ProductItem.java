@@ -21,6 +21,9 @@ public class ProductItem {
     @Column(name = "product_id")
     private Integer productId;
 
+    @Column(name = "size")
+    private String size;
+
     @Column(name = "created_date")
     private Date createdDate;
 

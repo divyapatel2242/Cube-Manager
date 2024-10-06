@@ -24,6 +24,9 @@ public class Product {
     @Column(name = "img_url")
     private String imgUrl;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "created_date")
     private Date createdDate;
 

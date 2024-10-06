@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/manage")
+@RequestMapping("/cube-manage")
 public class LoginController {
 
     @GetMapping("/login")

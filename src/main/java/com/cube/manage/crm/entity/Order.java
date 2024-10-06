@@ -18,6 +18,9 @@ public class Order {
     @Column(name = "customer_id")
     private Integer customerId;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "order_date")
     private Date orderDate;
 
