@@ -1,9 +1,10 @@
 package com.cube.manage.crm.service;
 
 import com.cube.manage.crm.entity.Customer;
-import com.cube.manage.crm.esRepo.CustomerEsRepository;
+import com.cube.manage.crm.esrepo.CustomerEsRepository;
 import com.cube.manage.crm.esdocument.CustomerEs;
 import com.cube.manage.crm.repository.CustomerRepository;
+import com.cube.manage.crm.request.CustomerRequest;
 import com.cube.manage.crm.request.SearchCustomer;
 import com.cube.manage.crm.response.CustomerData;
 import com.cube.manage.crm.response.CustomerDataResponse;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,9 +47,12 @@ public class CustomerService {
         return customerData;
     }
 
-    public void addCustomerDetails(Customer customer) {
+    public void addCustomerDetails(CustomerRequest customerRequest) {
         CustomerEs customerEs = new CustomerEs();
-        BeanUtils.copyProperties(customer,customerEs);
+        BeanUtils.copyProperties(customerRequest,customerEs);
+        customerRequest.setCreatedDate(new Date());
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerRequest,customer);
         customerRepository.save(customer);
         customerEs.setId(customer.getId());
         customerEsRepository.save(customerEs);

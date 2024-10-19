@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderStatusRepository extends CrudRepository<OrderStatus,Integer> {
 
-    @Query(value = "select id from cube.orderstatus where status = ?", nativeQuery = true)
+    @Query(value = "select id from cube.order_status where status = :status", nativeQuery = true)
     Integer fetchStatusId(String status);
 }

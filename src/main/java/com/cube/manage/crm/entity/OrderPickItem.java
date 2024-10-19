@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "orderItem", schema = "cube")
+@Table(name = "orderPickItem", schema = "cube")
 @Data
 public class OrderPickItem {
 

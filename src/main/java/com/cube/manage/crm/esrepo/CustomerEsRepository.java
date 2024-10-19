@@ -1,4 +1,4 @@
-package com.cube.manage.crm.esRepo;
+package com.cube.manage.crm.esrepo;
 
 import com.cube.manage.crm.esdocument.CustomerEs;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;

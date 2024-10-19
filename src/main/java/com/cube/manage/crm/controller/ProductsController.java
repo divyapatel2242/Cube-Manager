@@ -16,7 +16,7 @@ public class ProductsController {
     private ProductService productService;
 
     @GetMapping("/")
-    private String fetchProduct(Model model){
+    public String fetchProduct(Model model){
         return "product";
     }
 

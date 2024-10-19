@@ -16,18 +16,20 @@ public class InventoryController {
     private InventoryService inventoryService;
 
     @GetMapping("/")
-    private String fetchInventory(Model model){
+    public String fetchInventory(Model model){
         return "Inventory";
     }
 
     @PostMapping("/add-Inventory")
-    private String addInventory(@RequestBody InventoryRequest inventoryRequest){
+    @ResponseBody
+    public String addInventory(@RequestBody InventoryRequest inventoryRequest){
+        inventoryService.validateSkidToAdd(inventoryRequest.getSkids());
         inventoryService.addInventory(inventoryRequest);
         return "Successfully Added Inventory";
     }
 
     @GetMapping("/get-Inventory")
-    private String fetchBrand(@RequestParam(value = "id",required = false) String id, Model model){
+    public String fetchBrand(@RequestParam(value = "id",required = false) String id, Model model){
         InventoryResponse inventoryResponse = inventoryService.fetchInventoryData(id);
         model.addAttribute("inventoryResponse",inventoryResponse);
         return "inventory";

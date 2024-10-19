@@ -1,6 +1,7 @@
 package com.cube.manage.crm.controller;
 
 import com.cube.manage.crm.entity.Customer;
+import com.cube.manage.crm.request.CustomerRequest;
 import com.cube.manage.crm.request.SearchCustomer;
 import com.cube.manage.crm.response.CustomerDataResponse;
 import com.cube.manage.crm.service.CustomerService;
@@ -25,7 +26,7 @@ public class CustomerController {
         return "customer";
     }
 //,
-    @RequestMapping(value = "/get-customer", method = RequestMethod.GET)
+    @GetMapping(value = "/get-customer")
     public String getCustomer(@RequestBody SearchCustomer searchCustomer, Model model){
 //        if(Objects.isNull(searchCustomer.getCustomerId()) && Objects.isNull(searchCustomer.getEmail()))
 //            return "customer";
@@ -41,7 +42,7 @@ public class CustomerController {
     }
 //@ModelAttribute("customer")
     @PostMapping("/add-customer")
-    public String addCustomer(@RequestBody Customer customer, Model model){
+    public String addCustomer(@RequestBody CustomerRequest customer, Model model){
         customerService.addCustomerDetails(customer);
         model.addAttribute("message","Customer Details Added Successfully!");
         return "add-customer";

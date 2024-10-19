@@ -27,16 +27,15 @@ public class InventoryService {
 
 
     public void addInventory(InventoryRequest inventoryRequest) {
-
-        if(Objects.isNull(inventoryRequest.getInventoryId())){
+        Inventory inventory = inventoryRepository.fetchInventoryBySku(inventoryRequest.getSku());
+        if(Objects.isNull(inventory)){
             addProductInInventory(inventoryRequest);
             return;
         }
-        addQuantityOfProductInInventory(inventoryRequest);
+        addQuantityOfProductInInventory(inventoryRequest, inventory);
     }
 
-    private void addQuantityOfProductInInventory(InventoryRequest inventoryRequest) {
-        Inventory inventory = inventoryRepository.findById(inventoryRequest.getInventoryId()).get();
+    private void addQuantityOfProductInInventory(InventoryRequest inventoryRequest, Inventory inventory) {
         inventory.setAvailableQuantity(inventory.getAvailableQuantity() + inventoryRequest.getSkids().size());
         inventory.setUpdatedDate(new Date());
         inventoryRepository.save(inventory);
@@ -78,5 +77,11 @@ public class InventoryService {
         Integer count = productUnitRepository.countOfSkid(skid);
         if(count != 0)
             throw new RuntimeException("Skid is not valid");
+    }
+
+    public void validateSkidToAdd(List<String> skids) {
+        for(String skid:skids){
+            validateSkid(skid);
+        }
     }
 }

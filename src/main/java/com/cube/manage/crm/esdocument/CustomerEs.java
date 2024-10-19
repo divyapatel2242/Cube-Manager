@@ -7,10 +7,6 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import java.util.Date;
-
 @Document(indexName = "customer")
 @Setting(settingPath = "static/es-settings.json")
 @Data

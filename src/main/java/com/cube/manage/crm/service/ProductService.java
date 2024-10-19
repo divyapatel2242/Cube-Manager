@@ -2,8 +2,8 @@ package com.cube.manage.crm.service;
 
 import com.cube.manage.crm.entity.Product;
 import com.cube.manage.crm.entity.ProductItem;
-import com.cube.manage.crm.esRepo.ProductEsRepository;
-import com.cube.manage.crm.esRepo.ProductItemEsRepository;
+import com.cube.manage.crm.esrepo.ProductEsRepository;
+import com.cube.manage.crm.esrepo.ProductItemEsRepository;
 import com.cube.manage.crm.esdocument.ProductEs;
 import com.cube.manage.crm.esdocument.ProductItemEs;
 import com.cube.manage.crm.repository.ProductDataRepository;

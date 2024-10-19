@@ -16,18 +16,18 @@ public class BrandController {
     private BrandService brandService;
 
     @GetMapping("/")
-    private String fetchBrand(Model model){
+    public String fetchBrand(Model model){
         return "Brand";
     }
 
     @PostMapping("/add-Brand")
-    private String addBrand(@RequestBody BrandRequest brandRequest){
+    public String addBrand(@RequestBody BrandRequest brandRequest){
         brandService.addBrand(brandRequest);
         return "Successfully Added Inventory";
     }
 
     @GetMapping("/get-Brand")
-    private String fetchBrand(@RequestParam(value = "id",required = false) String id, Model model){
+    public String fetchBrand(@RequestParam(value = "id",required = false) String id, Model model){
         BrandResponse brandResponse = brandService.fetchBrandData(id);
         model.addAttribute("productResponse",brandResponse);
         return "product";

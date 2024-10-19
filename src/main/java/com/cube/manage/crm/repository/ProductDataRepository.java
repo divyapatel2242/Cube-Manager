@@ -1,7 +1,7 @@
 package com.cube.manage.crm.repository;
 
 import com.cube.manage.crm.entity.Product;
-import com.cube.manage.crm.esRepo.ProductEsRepository;
+import com.cube.manage.crm.esrepo.ProductEsRepository;
 import com.cube.manage.crm.esdocument.ProductEs;
 import com.cube.manage.crm.response.ProductResponse;
 import org.springframework.beans.BeanUtils;

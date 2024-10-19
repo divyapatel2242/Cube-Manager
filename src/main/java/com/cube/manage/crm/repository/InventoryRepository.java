@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InventoryRepository extends CrudRepository<Inventory, Integer> {
 
-    @Query(value = "select available_quantity from cube.inventory where sku = ?",nativeQuery = true)
+    @Query(value = "select available_quantity from cube.inventory where sku = :sku",nativeQuery = true)
     public Integer fetchAvailableQuantity(String sku);
 
-    @Query(value = "select * from cube.inventory where sku = ?", nativeQuery = true)
+    @Query(value = "select * from cube.inventory where sku = :sku", nativeQuery = true)
     Inventory fetchInventoryBySku(String sku);
 }

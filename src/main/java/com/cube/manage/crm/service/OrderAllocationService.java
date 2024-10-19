@@ -38,7 +38,7 @@ public class OrderAllocationService {
     public void assignSkidsToOrder(OrderRequest orderRequest) {
         List<Productunit> allocattingProductunits = productUnitRepository.fetchAllocatingUnits(orderRequest.getSku(), ProductUnitEnum.IN_STOCK.value,orderRequest.getQuantity());
         Order order = createOrder(orderRequest);
-        OrderItem orderItem = createOrderItem(orderRequest, order);
+        createOrderItem(orderRequest, order);
         createOrderPickItem(allocattingProductunits, orderRequest, order);
     }
 
@@ -73,11 +73,11 @@ public class OrderAllocationService {
         Order order = new Order();
         order.setOrderDate(new Date());
         order.setOrderStatusId(orderStatusRepository.fetchStatusId("OD"));
-        order.setAddress(order.getAddress() +" "+ orderRequest.getCity() +" "+ orderRequest.getState() +" "+ orderRequest.getPinCode());
-        order.setCustomerId(order.getCustomerId());
+        order.setAddress(orderRequest.getAddress() +" "+ orderRequest.getCity() +" "+ orderRequest.getState() +" "+ orderRequest.getPinCode());
+        order.setCustomerId(orderRequest.getCustomerId());
         order.setPayablePrice(orderRequest.getPayableAmount());
         order.setTotalPrice(orderRequest.getPayableAmount());
-        order.setCredit(order.getCredit());
+        order.setCredit(orderRequest.getPayViaCredits());
         orderRepository.save(order);
         return order;
     }

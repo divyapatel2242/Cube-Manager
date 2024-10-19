@@ -24,7 +24,7 @@ public class BrandService {
     }
 
     public BrandResponse fetchBrandData(String id) {
-        if(Objects.isNull(id)){
+        if(Objects.nonNull(id)){
            Brand brand = brandRepository.findById(Integer.parseInt(id)).get();
            return new BrandResponse(Arrays.asList(brand));
         }

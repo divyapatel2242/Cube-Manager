@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface ProductUnitRepository extends CrudRepository<Productunit,Integer> {
 
-    @Query(value = "Select count(id) as count from cube.productunit where skid = ? ", nativeQuery = true)
+    @Query(value = "Select count(id) as count from cube.productunit where skid = :skid ", nativeQuery = true)
     Integer countOfSkid(String skid);
 
-    @Query(value = "select * from cube.productunit where sku = ? and status = ? order by id asce limit ?")
+    @Query(value = "select * from cube.productunit where sku = ? and status = ? order by id asc limit ?", nativeQuery = true)
     List<Productunit> fetchAllocatingUnits(String sku, String status, Integer quantity);
 }

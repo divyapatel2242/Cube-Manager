@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 import java.util.Date;
 
 @Data
-@Document(indexName = "productItem")
+@Document(indexName = "product_item")
 @Setting(settingPath = "static/es-settings.json")
 public class ProductItemEs {
 
