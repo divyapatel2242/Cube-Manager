@@ -10,20 +10,20 @@ import javax.persistence.*;
 public class OrderItem {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "order_id")
+    @Column(name = "order_id", nullable = false)
     private Integer orderId;
 
-    @Column(name = "sku")
+    @Column(name = "sku", nullable = false)
     private String sku;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false)
     private Double amount;
 
 }

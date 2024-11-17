@@ -11,23 +11,23 @@ import java.util.Date;
 public class OrderPickItem {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "order_id")
+    @Column(name = "order_id", nullable = false)
     private Integer orderId;
 
-    @Column(name = "sku")
+    @Column(name = "sku", nullable = false)
     private String sku;
 
-    @Column(name = "skid")
+    @Column(name = "skid", nullable = false)
     private String skid;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", nullable = false)
     private Date createdDate;
 
 }

@@ -11,14 +11,14 @@ import java.util.Date;
 public class Brand {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", nullable = false)
     private Date createdDate;
 
 }

@@ -73,10 +73,11 @@ public class InventoryService {
         return null;
     }
 
-    public void validateSkid(String skid) {
+    public boolean validateSkid(String skid) {
         Integer count = productUnitRepository.countOfSkid(skid);
         if(count != 0)
-            throw new RuntimeException("Skid is not valid");
+            return false;
+        return true;
     }
 
     public void validateSkidToAdd(List<String> skids) {

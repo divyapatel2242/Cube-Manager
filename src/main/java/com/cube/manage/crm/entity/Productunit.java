@@ -11,23 +11,23 @@ import java.util.Date;
 public class Productunit {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "sku")
+    @Column(name = "sku", nullable = false)
     private String sku;
 
-    @Column(name = "skid")
+    @Column(name = "skid", nullable = false)
     private String skid;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
 
-    @Column(name = "warehouse")
+    @Column(name = "warehouse", nullable = false)
     private String warehouse;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", nullable = false)
     private Date createdDate;
 
     @Column(name = "updated_date")

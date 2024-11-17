@@ -10,14 +10,14 @@ import javax.persistence.*;
 public class OrderStatus {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
 }

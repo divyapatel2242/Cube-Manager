@@ -11,20 +11,20 @@ import java.util.Date;
 public class Inventory {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "sku")
+    @Column(name = "sku", nullable = false, unique = true)
     private String sku;
 
-    @Column(name = "available_quantity")
+    @Column(name = "available_quantity", nullable = false)
     private Integer availableQuantity;
 
-    @Column(name = "warehouse")
+    @Column(name = "warehouse", nullable = false)
     private String warehouse;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", nullable = false)
     private Date createdDate;
 
     @Column(name = "updated_date")

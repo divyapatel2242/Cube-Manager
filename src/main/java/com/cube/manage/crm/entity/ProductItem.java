@@ -11,20 +11,20 @@ import java.util.Date;
 public class ProductItem {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "sku")
+    @Column(name = "sku", nullable = false)
     private String sku;
 
-    @Column(name = "product_id")
+    @Column(name = "product_id", nullable = false)
     private Integer productId;
 
-    @Column(name = "size")
+    @Column(name = "size", nullable = false)
     private String size;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", nullable = false)
     private Date createdDate;
 
     @Column(name = "updated_date")

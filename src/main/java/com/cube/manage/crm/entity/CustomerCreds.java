@@ -11,20 +11,20 @@ import java.util.Date;
 public class CustomerCreds {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "customer_id")
+    @Column(name = "customer_id", nullable = false)
     private Integer customerId;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "last_password_update")
