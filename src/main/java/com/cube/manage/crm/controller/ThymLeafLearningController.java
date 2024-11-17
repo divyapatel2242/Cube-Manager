@@ -5,6 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/*
+ * @auther
+ * Divya Patel
+ * */
+
 @Controller
 public class ThymLeafLearningController {
 
@@ -20,6 +25,12 @@ public class ThymLeafLearningController {
             return "dashboard";
         else
             return "login";
+    }
+
+    @PostMapping("/logout")
+    public String postLogout(Model module){
+        module.addAttribute("creds", new Creds());
+        return "login";
     }
 
 }

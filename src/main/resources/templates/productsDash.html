@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .charts-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .products-table th,
+        .products-table td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .products-table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .products-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .products-table tr:hover {
+            background-color: #eaeaea;
+        }
+
+        .products-table td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn.edit {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn.edit:hover {
+            background-color: #218838;
+        }
+
+        .btn.delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn.delete:hover {
+            background-color: #c82333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .charts-container {
+                flex-direction: column;
+            }
+
+            .chart {
+                margin-bottom: 20px;
+            }
+
+            .products-table th,
+            .products-table td {
+                padding: 8px;
+            }
+
+            .btn {
+                padding: 6px 10px;
+            }
+        }
+    </style>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Products Dashboard</h1>
+
+    <div class="charts-container">
+        <!-- Total Stock Chart -->
+        <div class="chart">
+            <div class="chart-title">Total Stock</div>
+            <canvas id="totalStockChart"></canvas>
+        </div>
+
+        <!-- Sales Figures Chart -->
+        <div class="chart">
+            <div class="chart-title">Sales Figures</div>
+            <canvas id="salesFiguresChart"></canvas>
+        </div>
+
+        <!-- Potential Revenue Chart -->
+        <div class="chart">
+            <div class="chart-title">Potential Revenue</div>
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <table class="products-table">
+        <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Stock Quantity</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Sample data, to be replaced with Thymeleaf -->
+        <tr th:each="product : ${products}">
+            <td th:text="${product.name}">Sample Product</td>
+            <td th:text="${product.category}">Sample Category</td>
+            <td th:text="${product.stockQuantity}">50</td>
+            <td th:text="${product.price}">$25.00</td>
+            <td class="action-buttons">
+                <button class="btn edit" th:onclick="'editProduct(' + ${product.id} + ')'">Edit</button>
+                <button class="btn delete" th:onclick="'deleteProduct(' + ${product.id} + ')'">Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+        // Sample data, replace with actual data from Thymeleaf model
+        const totalStockData = {
+            labels: ['Category A', 'Category B', 'Category C'],
+            datasets: [{
+                label: 'Total Stock',
+                data: [200, 150, 300],
+                backgroundColor: ['#007bff', '#28a745', '#dc3545'],
+                borderColor: '#fff',
+                borderWidth: 1
+            }]
+        };
+
+        const salesFiguresData = {
+            labels: ['Product A', 'Product B', 'Product C'],
+            datasets: [{
+                label: 'Sales Figures',
+                data: [5000, 3000, 4500],
+                backgroundColor: ['#007bff', '#28a745', '#dc3545'],
+                borderColor: '#fff',
+                borderWidth: 1
+            }]
+        };
+
+        const revenueData = {
+            labels: ['Product A', 'Product B', 'Product C'],
+            datasets: [{
+                label: 'Potential Revenue',
+                data: [100000, 75000, 135000],
+                backgroundColor: ['#007bff', '#28a745', '#dc3545'],
+                borderColor: '#fff',
+                borderWidth: 1
+            }]
+        };
+
+        function createChart(ctx, type, data) {
+            return new Chart(ctx, {
+                type: type,
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize Charts
+        const totalStockCtx = document.getElementById('totalStockChart').getContext('2d');
+        createChart(totalStockCtx, 'doughnut', totalStockData);
+
+        const salesFiguresCtx = document.getElementById('salesFiguresChart').getContext('2d');
+        createChart(salesFiguresCtx, 'bar', salesFiguresData);
+
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        createChart(revenueCtx, 'bar', revenueData);
+    </script>
+</body>
+</html>
