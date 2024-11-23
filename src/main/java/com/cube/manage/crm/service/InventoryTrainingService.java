@@ -1,5 +1,8 @@
 package com.cube.manage.crm.service;
 
+import com.cube.manage.crm.request.OOStockDateRequest;
+import org.apache.spark.ml.Pipeline;
+import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.classification.RandomForestClassificationModel;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
 import org.apache.spark.ml.feature.StringIndexer;
@@ -9,10 +12,15 @@ import org.apache.spark.ml.regression.DecisionTreeRegressor;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.expressions.UserDefinedFunction;
 import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.Metadata;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +35,7 @@ public class InventoryTrainingService {
 
     private DecisionTreeRegressionModel decisionTreeRegressionModel;
 
-    public String trainingInventoryData(){
+    public String trainingInventoryData() throws IOException {
         String path = "C:\\Divya\\DataBaseOfCubeManager\\InventoryStockDetail.csv";
         //Load Data from particular path and convert it into specific data type
         Dataset<Row> dataset = sparkSession.read().format("csv").option("header","true").option("inferSchema","true").load(path);
@@ -105,7 +113,7 @@ public class InventoryTrainingService {
         return list;
     }
 
-    private String trainModelData(Dataset<Row> rowDataset){
+    private String trainModelData(Dataset<Row> rowDataset) throws IOException {
         Dataset<Row>[] splitedData = rowDataset.randomSplit(new double[]{0.8D,0.2D});
         Dataset<Row> trainDataSet = splitedData[0];
         Dataset<Row> testDataSet = splitedData[1];
@@ -128,9 +136,44 @@ public class InventoryTrainingService {
                 .setLabelCol("date_diff").setPredictionCol("prediction");
 
         double accuracy = evaluator.evaluate(prediction);
-
+        decisionTreeRegressionModel.write().overwrite().save("decisionTreeInventoryStockProjectionModel");
         System.out.println("Accuracy of Model : " + accuracy);
         return String.valueOf(accuracy);
     }
 
+
+    public LocalDate fetchOutOfStockDate(OOStockDateRequest ooStockDateRequest) {
+        Dataset<Row> data = sparkSession.createDataFrame(Arrays.asList(
+                RowFactory.create(ooStockDateRequest.getBrand(),
+                        ooStockDateRequest.getInstockQuantity(),
+                        ooStockDateRequest.getWarehouse(),
+                        ooStockDateRequest.getProductType())
+        ), new StructType(new StructField[]{
+                new StructField("brand_name", DataTypes.StringType, false, Metadata.empty()),
+                new StructField("instock_quantity", DataTypes.IntegerType, false, Metadata.empty()),
+                new StructField("warehouse", DataTypes.StringType, false, Metadata.empty()),
+                new StructField("product_type", DataTypes.StringType, false, Metadata.empty()),
+        }));
+
+        StringIndexer brandIndexer = new StringIndexer().setInputCol("brand_name").setOutputCol("brand").setHandleInvalid("keep");
+        StringIndexer cityIndexer = new StringIndexer().setInputCol("warehouse").setOutputCol("city").setHandleInvalid("keep");
+        StringIndexer productIndexer = new StringIndexer().setInputCol("product_type").setOutputCol("product").setHandleInvalid("keep");
+
+
+        Dataset<Row> brandData = brandIndexer.fit(data).transform(data);
+        Dataset<Row> cityData = cityIndexer.fit(brandData).transform(brandData);
+        Dataset<Row> finalData = productIndexer.fit(cityData).transform(cityData);
+
+        finalData.drop("brand_name","warehouse","product_type");
+
+        VectorAssembler vectorAssembler = new VectorAssembler()
+                .setInputCols(new String[]{"instock_quantity","brand","product","city"}).setOutputCol("features");
+        Dataset<Row> finalDataSet = vectorAssembler.transform(finalData);
+//        PipelineModel pipeline = PipelineModel.load("\"C:\\Projects\\cube\\src\\main\\java\\ml\\models\\");
+//        Dataset<Row> prediction = pipeline.transform(finalDataSet);
+        Dataset<Row> prediction = decisionTreeRegressionModel.transform(finalDataSet);
+        List<Row> response = prediction.select("prediction").collectAsList();
+        Integer outOfStockDay = Math.toIntExact(Math.round(prediction.select("prediction").collectAsList().get(0).getDouble(0)));
+        return ooStockDateRequest.getInstockDate().plusDays(outOfStockDay);
+    }
 }
