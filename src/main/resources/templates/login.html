@@ -69,17 +69,46 @@
 <body>
 <div class="login-container">
     <h1>Login</h1>
-    <form th:action="dashboard" th:method="post" th:object="${creds}">
-        <div class="input-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" th:field="*{userName}" required>
+    <form  id="loginForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+            <label for="userName">Username</label>
+            <input type="text" id="userName" name="userName" required>
         </div>
-        <div class="input-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" th:field="*{passWord}" required>
+        <div class="form-group">
+            <label for="passWord">Password</label>
+            <input type="password" id="passWord" name="passWord" required>
         </div>
-        <button type="submit">Login</button>
+        <div class="form-group">
+            <button type="submit">Login</button>
+        </div>
     </form>
 </div>
 </body>
+
+<script>
+
+
+async function submitForm(event) {
+        event.preventDefault();
+        const form = document.getElementById('loginForm');
+        const formData = new FormData(form);
+        const jsonData = {};
+        formData.forEach((value, key) => (jsonData[key] = value));
+
+        const response = await fetch('/cube-manage/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonData),
+        });
+
+        if (response.ok) {
+            window.location.href = '/cube-manage/dashboard';
+        } else {
+            alert('Login failed');
+        }
+    }
+    </script>
+
 </html>

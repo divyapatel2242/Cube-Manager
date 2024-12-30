@@ -1,15 +1,19 @@
 package com.cube.manage.crm.service;
 
 import com.cube.manage.crm.entity.Customer;
+import com.cube.manage.crm.entity.UserCreds;
 import com.cube.manage.crm.esrepo.CustomerEsRepository;
 import com.cube.manage.crm.esdocument.CustomerEs;
+import com.cube.manage.crm.repository.CustomerCredsRepository;
 import com.cube.manage.crm.repository.CustomerRepository;
 import com.cube.manage.crm.request.CustomerRequest;
 import com.cube.manage.crm.request.SearchCustomer;
+import com.cube.manage.crm.request.UserRegisterRequest;
 import com.cube.manage.crm.response.CustomerData;
 import com.cube.manage.crm.response.CustomerDataResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +30,12 @@ public class CustomerService {
     @Autowired
     private CustomerEsRepository customerEsRepository;
 
-    public CustomerDataResponse fetchCustomersResponseService(SearchCustomer searchCustomer){
+    @Autowired
+    private CustomerCredsRepository customerCredsRepository;
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+    public CustomerDataResponse fetchCustomersResponseService(SearchCustomer searchCustomery){
         CustomerDataResponse customerDataResponse = new CustomerDataResponse();
         Iterable<CustomerEs> customerEs = customerEsRepository.findAll();
         Iterator<CustomerEs> iterator = customerEs.iterator();
@@ -56,5 +65,21 @@ public class CustomerService {
         customerRepository.save(customer);
         customerEs.setId(customer.getId());
         customerEsRepository.save(customerEs);
+    }
+
+    public String registerUser(UserRegisterRequest userRegisterRequest) {
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(userRegisterRequest,customer);
+        customer.setCreatedDate(new Date());
+        customer.setCustomerType(userRegisterRequest.getUsertype());
+        customerRepository.save(customer);
+
+        UserCreds userCreds = new UserCreds();
+        userCreds.setCustomerId(customer.getId());
+        userCreds.setUserName(userRegisterRequest.getUsername());
+        userCreds.setPassword(encoder.encode(userRegisterRequest.getPassword()));
+        userCreds.setUserType(userRegisterRequest.getUsertype());
+        customerCredsRepository.save(userCreds);
+        return userCreds.getUserName();
     }
 }

@@ -80,6 +80,30 @@
             <button type="submit">Add Product</button>
         </div>
     </form>
+
+    <script>
+    async function submitForm(event) {
+        event.preventDefault();
+        const form = document.getElementById('registerForm');
+        const formData = new FormData(form);
+        const jsonData = {};
+        formData.forEach((value, key) => (jsonData[key] = value));
+
+        const response = await fetch('/cube-manage/register/user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonData),
+        });
+
+        if (response.ok) {
+            window.location.href = '/cube-manage/login';
+        } else {
+            alert('Registration failed');
+        }
+    }
+</script>
 </div>
 </body>
 </html>
