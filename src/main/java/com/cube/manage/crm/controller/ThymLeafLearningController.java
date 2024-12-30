@@ -11,15 +11,16 @@ import org.springframework.web.bind.annotation.*;
  * */
 
 @Controller
+@RequestMapping
 public class ThymLeafLearningController {
 
-    @GetMapping("/login")
-    public String getLogin(Model module){
-        module.addAttribute("creds", new Creds());
-        return "login";
-    }
+//    @GetMapping("/login")
+//    public String getLogin(Model module){
+//        module.addAttribute("creds", new Creds());
+//        return "login";
+//    }
 
-    @PostMapping("/dashboard")
+    @PostMapping("/thym/dashboard")
     public String getDashboard(@ModelAttribute Creds creds){
         if(creds.getUserName().equalsIgnoreCase("divya") && creds.getPassWord().equalsIgnoreCase("divya"))
             return "dashboard";
@@ -27,11 +28,11 @@ public class ThymLeafLearningController {
             return "login";
     }
 
-    @PostMapping("/logout")
-    public String postLogout(Model module){
-        module.addAttribute("creds", new Creds());
-        return "login";
-    }
+//    @PostMapping("/logout")
+//    public String postLogout(Model module){
+//        module.addAttribute("creds", new Creds());
+//        return "login";
+//    }
 
 }
 

@@ -148,6 +148,11 @@
     <div class="logo">
         <img src="logo.png" alt="Cube Manager Logo">
     </div>
+    <form  id="loginForm" onsubmit="submitForm(event)">
+        <button>
+            <button type="submit">Logout</button>
+        </button>
+    </form>
     <div class="nav">
         <div class="nav-item"><a href="#" onclick="loadContent('/cube-manage/home/')">Home</a></div>
         <div class="nav-item"><a href="#" onclick="loadContent('profile.html')">Profile</a></div>
@@ -220,6 +225,17 @@
             </div>
         `;
         document.getElementById('content').innerHTML = inventoryPageContent;
+    }
+
+    async function submitForm(event) {
+        const response = await fetch('/cube-manage/logout', {
+            method: 'POST'
+        });
+        if (response.ok) {
+            window.location.href = '/cube-manage/login';
+        } else {
+            alert('Logout failed');
+        }
     }
 </script>
 </body>

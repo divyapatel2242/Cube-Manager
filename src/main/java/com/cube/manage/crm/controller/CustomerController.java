@@ -3,6 +3,7 @@ package com.cube.manage.crm.controller;
 import com.cube.manage.crm.entity.Customer;
 import com.cube.manage.crm.request.CustomerRequest;
 import com.cube.manage.crm.request.SearchCustomer;
+import com.cube.manage.crm.request.UserRegisterRequest;
 import com.cube.manage.crm.response.CustomerDataResponse;
 import com.cube.manage.crm.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 @Controller
-@RequestMapping("/cube-manage/customer")
+@RequestMapping("/customer")
 public class CustomerController {
 
     @Autowired

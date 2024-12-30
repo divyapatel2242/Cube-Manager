@@ -6,9 +6,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "customer_creds", schema = "cube")
+@Table(name = "user_creds", schema = "cube")
 @Data
-public class CustomerCreds {
+public class UserCreds {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,14 +18,14 @@ public class CustomerCreds {
     @Column(name = "customer_id", nullable = false)
     private Integer customerId;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "email", nullable = false)
-    private String email;
+    @Column(name = "user_name", nullable = false)
+    private String userName;
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "user_type", nullable = false)
+    private String userType;
 
     @Column(name = "last_password_update")
     private Date lastPasswordUpdate;
