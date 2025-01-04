@@ -12,17 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/product")
 public class ProductsController {
 
     @Autowired
     private ProductService productService;
-
-    @GetMapping("/")
-    public String fetchProduct(Model model){
-        return "product";
-    }
 
     @PostMapping("/add-product")
     public ResponseEntity<String> addProduct(@RequestBody ProductRequest productRequest, Model model){
@@ -36,10 +31,8 @@ public class ProductsController {
         return ResponseEntity.ok("Successfully Added Item");
     }
     @GetMapping("/get-product")
-    public String fetchProduct(@RequestParam(value = "id",required = false) String id, Model model){
-       ProductResponse productResponse = productService.fetchProductData(id);
-       model.addAttribute("productResponse",productResponse);
-       return "product";
+    public ProductResponse fetchProduct(@RequestParam(value = "id",required = false) String id){
+       return productService.fetchProductData(id);
     }
 
     @GetMapping("/get-all-products")
@@ -48,15 +41,13 @@ public class ProductsController {
     }
 
     @GetMapping("/validate-sku")
-    public String validateSku(@RequestParam(value = "sku",required = true) String sku, Model model){
+    public ResponseEntity<String> validateSku(@RequestParam(value = "sku",required = true) String sku){
         try{
             productService.validateSku(sku);
         } catch (Exception e){
-            model.addAttribute("validationSku","Sku already Present!");
-            return "product";
+            return ResponseEntity.badRequest().build();
         }
-        model.addAttribute("validationSku","Scanned Successfully");
-        return "product";
+        return ResponseEntity.ok("valid Sku");
     }
 
     @GetMapping("/get-brands")
