@@ -11,6 +11,7 @@ import com.cube.manage.crm.repository.ProductItemRepository;
 import com.cube.manage.crm.repository.ProductRepository;
 import com.cube.manage.crm.request.ProductItemRequest;
 import com.cube.manage.crm.request.ProductRequest;
+import com.cube.manage.crm.response.BrandIdNameResponse;
 import com.cube.manage.crm.response.ProductResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ProductService {
 
     @Autowired
     private ProductItemEsRepository productItemEsRepository;
+
+    @Autowired
+    private BrandService brandService;
 
 
     @Transactional
@@ -73,6 +77,8 @@ public class ProductService {
         product.setCreatedDate(new Date());
         product.setImgUrl(productRequest.getImgUrl());
         product.setDescription(productRequest.getDescription());
+        product.setRetailPrice(productRequest.getCostPrice());
+        product.setMrp(productRequest.getSalePrice());
         productRepository.save(product);
         ProductEs productEs = new ProductEs();
         productEs.setId(product.getId().toString());
@@ -110,6 +116,13 @@ public class ProductService {
         return productResponse;
     }
 
+    public List<ProductResponse> fetchProductsAsPerPage(Integer pageNo, Integer pageSize){
+        List<ProductResponse> productResponse = productDataRepository.fetchProductResponseDataForPage(pageNo, pageSize);
+        if(Objects.isNull(productResponse))
+            throw new RuntimeException("Product is not available");
+        return productResponse;
+    }
+
     @Transactional
     public void addProductItem(ProductRequest productRequest) {
         addProductItemDetails(productRequest);
@@ -119,5 +132,9 @@ public class ProductService {
        Integer count = productItemRepository.validateSku(sku);
        if(count != 0)
            throw new RuntimeException("Sku is not Valid");
+    }
+
+    public List<BrandIdNameResponse> fetchBrands() {
+        return brandService.fetchAllBrands();
     }
 }

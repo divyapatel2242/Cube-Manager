@@ -1,14 +1,11 @@
 package com.cube.manage.crm.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class ProductResponse {
-
+@AllArgsConstructor
+public class BrandIdNameResponse {
     private Integer id;
     private String name;
-    private String brandName;
-    private String imgUrl;
-    private Double cost;
-
 }

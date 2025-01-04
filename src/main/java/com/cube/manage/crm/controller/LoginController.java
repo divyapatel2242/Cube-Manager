@@ -7,6 +7,7 @@ import com.cube.manage.crm.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -56,7 +57,7 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/logout")
+    @PostMapping(value = "/logout")
     public ResponseEntity<String> logout() {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.isInvalidateHttpSession();
@@ -65,6 +66,14 @@ public class LoginController {
         SecurityContextHolder.clearContext();
         securityContextLogoutHandler.setSecurityContextRepository(null);
         return ResponseEntity.ok("Ok");
+    }
+
+    @PostMapping("/is-autherized")
+    public ResponseEntity<String> checkAutherization(){
+        if(loginService.isAutherized())
+            return ResponseEntity.ok("Authenticated");
+        else
+            return ResponseEntity.ok("Not Authenticated");
     }
 
 }

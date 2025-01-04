@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class Creds {
-    private String userName;
-    private String passWord;
+    private String username;
+    private String password;
 }
