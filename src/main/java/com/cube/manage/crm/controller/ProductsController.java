@@ -2,6 +2,7 @@ package com.cube.manage.crm.controller;
 
 import com.cube.manage.crm.request.ProductRequest;
 import com.cube.manage.crm.response.BrandIdNameResponse;
+import com.cube.manage.crm.response.ProductDetailResponse;
 import com.cube.manage.crm.response.ProductResponse;
 import com.cube.manage.crm.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class ProductsController {
        return productService.fetchProductData(id);
     }
 
+    @GetMapping("/get-product-detail")
+    public ProductDetailResponse fetchProductDetailResponse(@RequestParam(value = "id") String id){
+        return productService.fetchProductDetailData(id);
+    }
+
     @GetMapping("/get-all-products")
     public ResponseEntity<List<ProductResponse>> fetchAllProduct(@RequestParam("page") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
         return ResponseEntity.ok(productService.fetchProductsAsPerPage(pageNo, pageSize));
@@ -51,8 +57,7 @@ public class ProductsController {
     }
 
     @GetMapping("/get-brands")
-    @ResponseBody
-    public List<BrandIdNameResponse> fetchBrandIdName(Model model){
+    public List<BrandIdNameResponse> fetchBrandIdName(){
         return productService.fetchBrands();
     }
 

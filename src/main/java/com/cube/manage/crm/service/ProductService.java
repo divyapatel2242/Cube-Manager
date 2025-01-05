@@ -1,5 +1,6 @@
 package com.cube.manage.crm.service;
 
+import com.cube.manage.crm.dto.ProductDetailDto;
 import com.cube.manage.crm.entity.Product;
 import com.cube.manage.crm.entity.ProductItem;
 import com.cube.manage.crm.esrepo.ProductEsRepository;
@@ -11,17 +12,14 @@ import com.cube.manage.crm.repository.ProductItemRepository;
 import com.cube.manage.crm.repository.ProductRepository;
 import com.cube.manage.crm.request.ProductItemRequest;
 import com.cube.manage.crm.request.ProductRequest;
-import com.cube.manage.crm.response.BrandIdNameResponse;
-import com.cube.manage.crm.response.ProductResponse;
+import com.cube.manage.crm.response.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -136,5 +134,78 @@ public class ProductService {
 
     public List<BrandIdNameResponse> fetchBrands() {
         return brandService.fetchAllBrands();
+    }
+
+    public ProductDetailResponse fetchProductDetailData(String id) {
+        ProductDetailResponse productDetailResponse = new ProductDetailResponse();
+        List<ProductDetailDto> productDetailDtos = productDataRepository.fetchProductData(id);
+        productDetailResponse.setDescription(productDetailDtos.get(0).getDescription());
+        productDetailResponse.setId(Integer.valueOf(id));
+        productDetailResponse.setBrandName(productDetailDtos.get(0).getBrandName());
+        productDetailResponse.setName(productDetailDtos.get(0).getName());
+        productDetailResponse.setImg(productDetailDtos.get(0).getImg());
+        productDetailResponse.setCurrentAvailableTotalInventory(productDetailDtos.stream().mapToInt(ProductDetailDto::getAvailableQuantity).sum());
+        productDetailResponse.setTotalProfit(productDetailDtos.stream().mapToDouble(ProductDetailDto::getProfit).sum());
+        productDetailResponse.setTotalSale(productDetailDtos.stream().mapToInt(ProductDetailDto::getSkuCount).sum());
+
+        Map<String, List<ProductDetailDto>> mapOfSkuProductDetail = productDetailDtos.stream().collect(Collectors.groupingBy(ProductDetailDto::getSku));
+        Map<Date, List<ProductDetailDto>> mapOfDateProductDetail = productDetailDtos.stream().collect(Collectors.groupingBy(ProductDetailDto::getSaleDate));
+        Map<String, List<ProductDetailDto>> mapOfStatusProductDetail = productDetailDtos.stream().collect(Collectors.groupingBy(ProductDetailDto::getStatus));
+
+        List<ProductItemDetailResponse> productItemDetailResponses = new ArrayList<>();
+        for(Map.Entry<String, List<ProductDetailDto>> entry: mapOfSkuProductDetail.entrySet()){
+            ProductItemDetailResponse productItemDetailResponse = new ProductItemDetailResponse();
+            productItemDetailResponse.setSize(entry.getValue().get(0).getSize());
+            productItemDetailResponse.setTotalProfit(entry.getValue().stream().mapToDouble(ProductDetailDto::getProfit).sum());
+            productItemDetailResponse.setSku(entry.getKey());
+            productItemDetailResponse.setAvailableInventory(entry.getValue().stream().mapToInt(ProductDetailDto::getAvailableQuantity).sum());
+            productItemDetailResponse.setTotalSale(entry.getValue().stream().mapToInt(ProductDetailDto::getSkuCount).sum());
+
+            Map<Date, List<ProductDetailDto>> mapOfSkuDateProductDetail = entry.getValue().stream().collect(Collectors.groupingBy(ProductDetailDto::getSaleDate));
+            Map<String, List<ProductDetailDto>> mapOfSkuStatusProductDetail = entry.getValue().stream().collect(Collectors.groupingBy(ProductDetailDto::getStatus));
+            List<ProductOrderCount> productOrderCounts = new ArrayList<>();
+            for(Map.Entry<Date, List<ProductDetailDto>> entryDate: mapOfSkuDateProductDetail.entrySet()){
+                ProductOrderCount productOrderCount = new ProductOrderCount();
+                productOrderCount.setSaleDate(entryDate.getKey());
+                productOrderCount.setSaleCount(entryDate.getValue().stream().mapToInt(ProductDetailDto::getSkuCount).sum());
+                productOrderCount.setSaleProfit(entryDate.getValue().stream().mapToDouble(ProductDetailDto::getProfit).sum());
+                productOrderCounts.add(productOrderCount);
+            }
+            productItemDetailResponse.setProductOrderCounts(productOrderCounts);
+
+            List<ProductOrderStatusCount> productOrderStatusCounts = new ArrayList<>();
+            for(Map.Entry<String, List<ProductDetailDto>> entryStatus: mapOfSkuStatusProductDetail.entrySet()){
+                ProductOrderStatusCount productOrderStatusCount = new ProductOrderStatusCount();
+                productOrderStatusCount.setStatus(entryStatus.getKey());
+                productOrderStatusCount.setStatusDescription(entryStatus.getValue().get(0).getStatusDescription());
+                productOrderStatusCount.setStatusCount(entryStatus.getValue().stream().mapToInt(ProductDetailDto::getSkuCount).sum());
+                productOrderStatusCounts.add(productOrderStatusCount);
+            }
+            productItemDetailResponse.setProductOrderStatusCounts(productOrderStatusCounts);
+            productItemDetailResponses.add(productItemDetailResponse);
+        }
+        productDetailResponse.setProductItemDetailResponses(productItemDetailResponses);
+
+        List<ProductOrderCount> productOrderCounts = new ArrayList<>();
+        for(Map.Entry<Date, List<ProductDetailDto>> entryDate: mapOfDateProductDetail.entrySet()){
+            ProductOrderCount productOrderCount = new ProductOrderCount();
+            productOrderCount.setSaleDate(entryDate.getKey());
+            productOrderCount.setSaleCount(entryDate.getValue().stream().mapToInt(ProductDetailDto::getSkuCount).sum());
+            productOrderCount.setSaleProfit(entryDate.getValue().stream().mapToDouble(ProductDetailDto::getProfit).sum());
+            productOrderCounts.add(productOrderCount);
+        }
+        productDetailResponse.setProductOrderCounts(productOrderCounts);
+
+        List<ProductOrderStatusCount> productOrderStatusCounts = new ArrayList<>();
+        for(Map.Entry<String, List<ProductDetailDto>> entryStatus: mapOfStatusProductDetail.entrySet()){
+            ProductOrderStatusCount productOrderStatusCount = new ProductOrderStatusCount();
+            productOrderStatusCount.setStatus(entryStatus.getKey());
+            productOrderStatusCount.setStatusDescription(entryStatus.getValue().get(0).getStatusDescription());
+            productOrderStatusCount.setStatusCount(entryStatus.getValue().stream().mapToInt(ProductDetailDto::getSkuCount).sum());
+            productOrderStatusCounts.add(productOrderStatusCount);
+        }
+        productDetailResponse.setProductOrderStatusCounts(productOrderStatusCounts);
+        return productDetailResponse;
+
     }
 }
