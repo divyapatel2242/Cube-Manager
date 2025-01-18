@@ -18,7 +18,7 @@ public class MLConfig {
     public SparkSession sparkSessionTesting(){
         System.setProperty("spark.driver.extraJavaOptions", "--add-opens java.base/sun.nio.ch=ALL-UNNAMED");
         System.setProperty("spark.executor.extraJavaOptions", "--add-opens java.base/sun.nio.ch=ALL-UNNAMED");
-
+        System.setProperty("hadoop.home.dir", "C:\\hadoop");
         return SparkSession.builder().appName("RecommendationTesting").master("local[1]").getOrCreate();
     }
 
