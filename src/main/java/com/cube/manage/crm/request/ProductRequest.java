@@ -12,5 +12,7 @@ public class ProductRequest {
     private Integer brand;
     private String description;
     private String imgUrl;
+    private Double costPrice;
+    private Double salePrice;
     private List<ProductItemRequest> productItemRequests;
 }

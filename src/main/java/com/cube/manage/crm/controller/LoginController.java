@@ -7,6 +7,7 @@ import com.cube.manage.crm.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.Response;
 
-@Controller
+@RestController
 @RequestMapping
 public class LoginController {
 
@@ -27,23 +28,12 @@ public class LoginController {
     @Autowired
     private CustomerService customerService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Model model){
-        return "login";
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Creds creds, Model model){
+    public ResponseEntity<String> login(@RequestBody Creds creds){
         if(loginService.validate(creds)){
             return ResponseEntity.ok("Ok");
         }
-        model.addAttribute("error", "Invalid username or password.");
         return ResponseEntity.badRequest().build();
-    }
-
-    @RequestMapping(value = "/register/user", method = RequestMethod.GET)
-    public String getRegisterUser(Model model){
-        return "userRegistration";
     }
 
     @RequestMapping(value = "/register/user", method = RequestMethod.POST)
@@ -56,7 +46,7 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/logout")
+    @PostMapping(value = "/logout")
     public ResponseEntity<String> logout() {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.isInvalidateHttpSession();
@@ -65,6 +55,14 @@ public class LoginController {
         SecurityContextHolder.clearContext();
         securityContextLogoutHandler.setSecurityContextRepository(null);
         return ResponseEntity.ok("Ok");
+    }
+
+    @PostMapping("/is-autherized")
+    public ResponseEntity<String> checkAutherization(){
+        if(loginService.isAutherized())
+            return ResponseEntity.ok("Authenticated");
+        else
+            return ResponseEntity.ok("Not Authenticated");
     }
 
 }
