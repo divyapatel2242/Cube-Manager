@@ -8,17 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/brand")
 public class BrandController {
 
     @Autowired
     private BrandService brandService;
-
-    @GetMapping("/")
-    public String fetchBrand(Model model){
-        return "Brand";
-    }
 
     @PostMapping("/add-Brand")
     public String addBrand(@RequestBody BrandRequest brandRequest){
@@ -27,10 +22,8 @@ public class BrandController {
     }
 
     @GetMapping("/get-Brand")
-    public String fetchBrand(@RequestParam(value = "id",required = false) String id, Model model){
-        BrandResponse brandResponse = brandService.fetchBrandData(id);
-        model.addAttribute("productResponse",brandResponse);
-        return "product";
+    public BrandResponse fetchBrand(@RequestParam(value = "id",required = false) String id){
+        return brandService.fetchBrandData(id);
     }
 
 }

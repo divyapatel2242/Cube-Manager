@@ -6,7 +6,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,7 +21,7 @@ public class LoginService {
 //    private JWTService jwtService;
 
     public boolean validate(Creds creds) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(creds.getUserName(),creds.getPassWord()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(creds.getUsername(),creds.getPassword()));
         if(authentication.isAuthenticated()){
             //return jwtService.generateToken(creds.getUserName());
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -31,5 +30,10 @@ public class LoginService {
 
         }
         return false;
+    }
+
+    public Boolean isAutherized(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.isAuthenticated();
     }
 }

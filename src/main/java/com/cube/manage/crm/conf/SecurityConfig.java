@@ -25,6 +25,8 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 @Configuration
 @EnableWebSecurity
@@ -49,14 +51,20 @@ public class SecurityConfig {
         //ConventionalSecurityConfig
         return security.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        request -> {
+                        httpRequest -> {
                             try {
-                                request
-                                        .antMatchers("/login","/logout", "/register/user")
+                                httpRequest
+                                        .antMatchers("/**")//("/login","/logout", "/register/user")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated()
-                                        .and().logout().permitAll();
+//                                        .and()
+//                                        .formLogin()
+//                                        .loginPage("/login").permitAll()
+                                        .and().logout(logout -> logout.permitAll()
+                                        .logoutSuccessHandler((request, response, authentication) -> {
+                                            response.setStatus(HttpServletResponse.SC_OK);
+                                        }));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

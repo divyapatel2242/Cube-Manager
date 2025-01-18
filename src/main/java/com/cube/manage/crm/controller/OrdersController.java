@@ -4,11 +4,12 @@ import com.cube.manage.crm.request.OrderRequest;
 import com.cube.manage.crm.response.OrderResponse;
 import com.cube.manage.crm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/orders")
 public class OrdersController {
 
@@ -17,22 +18,18 @@ public class OrdersController {
 
 
     @GetMapping("/available/sku")
-    public String availableSku(@RequestParam("sku") String sku, Model model){
+    public ResponseEntity<Integer> availableSku(@RequestParam("sku") String sku){
         Integer availableQuantity = orderService.fetchAvailableQuantityOfSku(sku);
-        model.addAttribute("availableSku",availableQuantity);
-        return "order";
+        return ResponseEntity.ok(availableQuantity);
     }
 
     @PostMapping("/place/order")
-    public String placeOrder(@RequestBody OrderRequest orderRequest, Model model){
+    public ResponseEntity<String> placeOrder(@RequestBody OrderRequest orderRequest){
         OrderResponse orderResponse = orderService.placeOrder(orderRequest);
         if(orderResponse.getIsSuccess()){
-            model.addAttribute("orderSuccessResponse",orderResponse.getSuccessMessage());
-        } else{
-            model.addAttribute("orderErrorResponse",orderResponse.getErrorMessage());
+            return ResponseEntity.ok(orderResponse.getSuccessMessage());
         }
-        return "order";
-
+        return ResponseEntity.badRequest().body(orderResponse.getErrorMessage());
     }
 
 }
