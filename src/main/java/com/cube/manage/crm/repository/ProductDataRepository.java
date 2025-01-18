@@ -5,12 +5,9 @@ import com.cube.manage.crm.dto.ProductDetailDto;
 import com.cube.manage.crm.entity.Product;
 import com.cube.manage.crm.esrepo.ProductEsRepository;
 import com.cube.manage.crm.esdocument.ProductEs;
-import com.cube.manage.crm.response.ProductDetailResponse;
-import com.cube.manage.crm.response.ProductItemDetailResponse;
-import com.cube.manage.crm.response.ProductResponse;
+import com.cube.manage.crm.response.ProductResponseData;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -27,39 +24,43 @@ public class ProductDataRepository {
     @Autowired
     private JDBCAccess jdbcAccess;
 
-    public ProductResponse fetchProductResponseData(String id) {
-        ProductResponse productResponse = new ProductResponse();
+    public ProductResponseData fetchProductResponseData(String id) {
+        ProductResponseData productResponseData = new ProductResponseData();
         ProductEs productEs = productEsRepository.findById(id).orElse(null);
         if(Objects.nonNull(productEs)){
-            BeanUtils.copyProperties(productEs,productResponse);
-            productResponse.setId(Integer.parseInt(productEs.getId()));
+            BeanUtils.copyProperties(productEs, productResponseData);
+            productResponseData.setId(Integer.parseInt(productEs.getId()));
             //ToDo:Search brand as well
-            return productResponse;
+            return productResponseData;
         }
         Product product = productRepository.findById(Integer.valueOf(id)).orElse(null); //ToDo make query to fetch both brand and product
         if(Objects.nonNull(product)){
-            BeanUtils.copyProperties(product,productResponse);
-            productResponse.setId(product.getId());
+            BeanUtils.copyProperties(product, productResponseData);
+            productResponseData.setId(product.getId());
             //ToDo:Search brand as well
-            return productResponse;
+            return productResponseData;
         }
         return null;
     }
 
-    public List<ProductResponse> fetchProductResponseDataForPage(Integer pageNo, Integer pageSize) {
+    public List<ProductResponseData> fetchProductResponseDataForPage(Integer pageNo, Integer pageSize) {
         Map<String, Object> params = new HashMap<>();
         params.put("pageNo", pageNo);
         params.put("pageSize", pageSize);
-        String query = "select p.id as id, p.name as name, p.retail_price as cost, p.img_url as imgurl, b.name as brand_name from cube.product p inner join cube.brand b on b.id=p.brand_id order by p.id asc limit :pageNo, :pageSize";
+        String query = "select p.id as id, p.name as name, p.retail_price as cost, p.img_url as imgurl, b.name as brand_name from cube.product p inner join cube.brand b on b.id=p.brand_id order by p.id desc limit :pageNo, :pageSize";
         return jdbcAccess.findUsingNamedParameter(query, params, (rs, rowNum) -> {
-            ProductResponse productResponse = new ProductResponse();
-            productResponse.setName(rs.getString("name"));
-            productResponse.setId(rs.getInt("id"));
-            productResponse.setCost(rs.getDouble("cost"));
-            productResponse.setImgUrl(rs.getString("imgurl"));
-            productResponse.setBrandName(rs.getString("brand_name"));
-            return productResponse;
+            ProductResponseData productResponseData = new ProductResponseData();
+            productResponseData.setName(rs.getString("name"));
+            productResponseData.setId(rs.getInt("id"));
+            productResponseData.setCost(rs.getDouble("cost"));
+            productResponseData.setImgUrl(rs.getString("imgurl"));
+            productResponseData.setBrandName(rs.getString("brand_name"));
+            return productResponseData;
         });
+    }
+
+    public Integer totalSizeOfProduct(){
+        return jdbcAccess.findInteger("select count(id) from cube.product;");
     }
 
     public List<ProductDetailDto> fetchProductData(String id) {

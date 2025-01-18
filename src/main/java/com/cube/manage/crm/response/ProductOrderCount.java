@@ -2,11 +2,9 @@ package com.cube.manage.crm.response;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class ProductOrderCount {
     private Integer saleCount;
-    private Date saleDate;
+    private String saleDate;
     private Double saleProfit;
 }

@@ -2,13 +2,12 @@ package com.cube.manage.crm.response;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ProductResponse {
 
-    private Integer id;
-    private String name;
-    private String brandName;
-    private String imgUrl;
-    private Double cost;
+    private Integer totalSize;
+    private List<ProductResponseData> productResponseData;
 
 }

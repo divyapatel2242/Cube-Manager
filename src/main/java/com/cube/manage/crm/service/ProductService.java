@@ -107,17 +107,21 @@ public class ProductService {
         productItemEsRepository.saveAll(productItemEsList);
     }
 
-    public ProductResponse fetchProductData(String id) {
-        ProductResponse productResponse = productDataRepository.fetchProductResponseData(id);
-        if(Objects.isNull(productResponse))
+    public ProductResponseData fetchProductData(String id) {
+        ProductResponseData productResponseData = productDataRepository.fetchProductResponseData(id);
+        if(Objects.isNull(productResponseData))
             throw new RuntimeException("Product is not available");
-        return productResponse;
+        return productResponseData;
     }
 
-    public List<ProductResponse> fetchProductsAsPerPage(Integer pageNo, Integer pageSize){
-        List<ProductResponse> productResponse = productDataRepository.fetchProductResponseDataForPage(pageNo, pageSize);
-        if(Objects.isNull(productResponse))
+    public ProductResponse fetchProductsAsPerPage(Integer pageNo, Integer pageSize){
+        ProductResponse productResponse = new ProductResponse();
+        List<ProductResponseData> productResponseData = productDataRepository.fetchProductResponseDataForPage(pageNo, pageSize);
+        Integer totalSize = productDataRepository.totalSizeOfProduct();
+        if(Objects.isNull(productResponseData))
             throw new RuntimeException("Product is not available");
+        productResponse.setTotalSize(totalSize);
+        productResponse.setProductResponseData(productResponseData);
         return productResponse;
     }
 
@@ -133,7 +137,7 @@ public class ProductService {
     }
 
     public List<BrandIdNameResponse> fetchBrands() {
-        return brandService.fetchAllBrands();
+        return brandService.fetchBrandsData();
     }
 
     public ProductDetailResponse fetchProductDetailData(String id) {
@@ -149,7 +153,7 @@ public class ProductService {
         productDetailResponse.setTotalSale(productDetailDtos.stream().mapToInt(ProductDetailDto::getSkuCount).sum());
 
         Map<String, List<ProductDetailDto>> mapOfSkuProductDetail = productDetailDtos.stream().collect(Collectors.groupingBy(ProductDetailDto::getSku));
-        Map<Date, List<ProductDetailDto>> mapOfDateProductDetail = productDetailDtos.stream().collect(Collectors.groupingBy(ProductDetailDto::getSaleDate));
+        Map<String, List<ProductDetailDto>> mapOfDateProductDetail = productDetailDtos.stream().collect(Collectors.groupingBy(productDetailDto -> productDetailDto.getSaleDate().toString()));
         Map<String, List<ProductDetailDto>> mapOfStatusProductDetail = productDetailDtos.stream().collect(Collectors.groupingBy(ProductDetailDto::getStatus));
 
         List<ProductItemDetailResponse> productItemDetailResponses = new ArrayList<>();
@@ -161,10 +165,10 @@ public class ProductService {
             productItemDetailResponse.setAvailableInventory(entry.getValue().stream().mapToInt(ProductDetailDto::getAvailableQuantity).sum());
             productItemDetailResponse.setTotalSale(entry.getValue().stream().mapToInt(ProductDetailDto::getSkuCount).sum());
 
-            Map<Date, List<ProductDetailDto>> mapOfSkuDateProductDetail = entry.getValue().stream().collect(Collectors.groupingBy(ProductDetailDto::getSaleDate));
+            Map<String, List<ProductDetailDto>> mapOfSkuDateProductDetail = entry.getValue().stream().collect(Collectors.groupingBy(productDetailDto -> productDetailDto.getSaleDate().toString()));
             Map<String, List<ProductDetailDto>> mapOfSkuStatusProductDetail = entry.getValue().stream().collect(Collectors.groupingBy(ProductDetailDto::getStatus));
             List<ProductOrderCount> productOrderCounts = new ArrayList<>();
-            for(Map.Entry<Date, List<ProductDetailDto>> entryDate: mapOfSkuDateProductDetail.entrySet()){
+            for(Map.Entry<String, List<ProductDetailDto>> entryDate: mapOfSkuDateProductDetail.entrySet()){
                 ProductOrderCount productOrderCount = new ProductOrderCount();
                 productOrderCount.setSaleDate(entryDate.getKey());
                 productOrderCount.setSaleCount(entryDate.getValue().stream().mapToInt(ProductDetailDto::getSkuCount).sum());
@@ -187,7 +191,7 @@ public class ProductService {
         productDetailResponse.setProductItemDetailResponses(productItemDetailResponses);
 
         List<ProductOrderCount> productOrderCounts = new ArrayList<>();
-        for(Map.Entry<Date, List<ProductDetailDto>> entryDate: mapOfDateProductDetail.entrySet()){
+        for(Map.Entry<String, List<ProductDetailDto>> entryDate: mapOfDateProductDetail.entrySet()){
             ProductOrderCount productOrderCount = new ProductOrderCount();
             productOrderCount.setSaleDate(entryDate.getKey());
             productOrderCount.setSaleCount(entryDate.getValue().stream().mapToInt(ProductDetailDto::getSkuCount).sum());
