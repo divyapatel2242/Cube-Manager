@@ -1,7 +1,7 @@
-package com.cube.manage.crm.controller;
+package com.cube.manage.crm.controller.mlControllers;
 
 import com.cube.manage.crm.request.OOStockDateRequest;
-import com.cube.manage.crm.service.InventoryTrainingService;
+import com.cube.manage.crm.service.mlService.InventoryTrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/ml/inventory")

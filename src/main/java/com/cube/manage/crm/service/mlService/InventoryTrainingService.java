@@ -1,4 +1,4 @@
-package com.cube.manage.crm.service;
+package com.cube.manage.crm.service.mlService;
 
 import com.cube.manage.crm.request.OOStockDateRequest;
 import org.apache.spark.ml.Pipeline;
@@ -136,7 +136,7 @@ public class InventoryTrainingService {
                 .setLabelCol("date_diff").setPredictionCol("prediction");
 
         double accuracy = evaluator.evaluate(prediction);
-        decisionTreeRegressionModel.write().overwrite().save("decisionTreeInventoryStockProjectionModel");
+//        decisionTreeRegressionModel.write().overwrite().save("/decisionTreeInventoryStockProjectionModel");
         System.out.println("Accuracy of Model : " + accuracy);
         return String.valueOf(accuracy);
     }
