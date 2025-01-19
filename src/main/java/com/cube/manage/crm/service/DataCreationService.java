@@ -3,9 +3,9 @@ package com.cube.manage.crm.service;
 import com.cube.manage.crm.entity.*;
 import com.cube.manage.crm.enums.PickItemEnum;
 import com.cube.manage.crm.enums.ProductUnitEnum;
-import com.cube.manage.crm.esrepo.CustomerEsRepository;
-import com.cube.manage.crm.esrepo.ProductEsRepository;
-import com.cube.manage.crm.esrepo.ProductItemEsRepository;
+//import com.cube.manage.crm.esrepo.CustomerEsRepository;
+//import com.cube.manage.crm.esrepo.ProductEsRepository;
+//import com.cube.manage.crm.esrepo.ProductItemEsRepository;
 import com.cube.manage.crm.repository.*;
 import com.cube.manage.crm.response.ImageUrlResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,8 +29,8 @@ public class DataCreationService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @Autowired
-    private CustomerEsRepository customerEsRepository;
+//    @Autowired
+//    private CustomerEsRepository customerEsRepository;
 
     @Autowired
     private ProductUnitRepository productUnitRepository;
@@ -68,14 +68,14 @@ public class DataCreationService {
     @Autowired
     private ProductItemRepository productItemRepository;
 
-    @Autowired
-    private ProductEsRepository productEsRepository;
+//    @Autowired
+//    private ProductEsRepository productEsRepository;
 
     @Autowired
     private ProductDataRepository productDataRepository;
 
-    @Autowired
-    private ProductItemEsRepository productItemEsRepository;
+//    @Autowired
+//    private ProductItemEsRepository productItemEsRepository;
 
     @Autowired
     private RestTemplate restTemplate;
