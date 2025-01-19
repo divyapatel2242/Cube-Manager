@@ -162,4 +162,45 @@ public class TitanicDataSetTestingMLService {
 
     }
 
+    public static String longestPalindrome(String s) {
+        String longest = "";
+        for (int i=0; i<s.length(); i++){
+            String startText="";
+            String endText="";
+            int start = i;
+            for(int j=s.length()-1;j>=i;j--){
+                if(start>j){
+                    break;
+                }
+                if(s.charAt(start)==s.charAt(j)){
+                    startText = startText + s.charAt(start);
+                    if(start!=j) {
+                        endText = s.charAt(j) + endText;
+                    }
+                    start++;
+                }else{
+                    startText = "";
+                    endText = "";
+                }
+            }
+            if((startText.length()+endText.length()) > longest.length()){
+                longest = startText + endText;
+            }
+        }
+        return longest;
+    }
+
+    public static void main(String[] args) {
+        longestPalindrome("cbbd");
+    }
+
+
+
+
+
+
+
+
+
+
 }

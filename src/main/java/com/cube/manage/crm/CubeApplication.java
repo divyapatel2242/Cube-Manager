@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CubeApplication {
 
 	public static void main(String[] args) {
+		System.setProperty("hadoop.home.dir", "C:\\hadoop");
 		SpringApplication.run(CubeApplication.class, args);
 	}
 
