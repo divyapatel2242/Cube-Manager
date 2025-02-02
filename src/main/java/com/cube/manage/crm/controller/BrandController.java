@@ -26,4 +26,9 @@ public class BrandController {
         return brandService.fetchBrandData(id);
     }
 
+    @GetMapping("/testing")
+    public String fetchTesting(){
+        return "Successfully Connected";
+    }
+
 }
