@@ -3,7 +3,7 @@ package com.cube.manage.crm.repository;
 import com.cube.manage.crm.dbutil.JDBCAccess;
 import com.cube.manage.crm.dto.ProductDetailDto;
 import com.cube.manage.crm.entity.Product;
-import com.cube.manage.crm.esrepo.ProductEsRepository;
+//import com.cube.manage.crm.esrepo.ProductEsRepository;
 import com.cube.manage.crm.esdocument.ProductEs;
 import com.cube.manage.crm.response.ProductResponseData;
 import org.springframework.beans.BeanUtils;
@@ -18,21 +18,21 @@ public class ProductDataRepository {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private ProductEsRepository productEsRepository;
+//    @Autowired
+//    private ProductEsRepository productEsRepository;
 
     @Autowired
     private JDBCAccess jdbcAccess;
 
     public ProductResponseData fetchProductResponseData(String id) {
         ProductResponseData productResponseData = new ProductResponseData();
-        ProductEs productEs = productEsRepository.findById(id).orElse(null);
-        if(Objects.nonNull(productEs)){
-            BeanUtils.copyProperties(productEs, productResponseData);
-            productResponseData.setId(Integer.parseInt(productEs.getId()));
-            //ToDo:Search brand as well
-            return productResponseData;
-        }
+//        ProductEs productEs = productEsRepository.findById(id).orElse(null);
+//        if(Objects.nonNull(productEs)){
+//            BeanUtils.copyProperties(productEs, productResponseData);
+//            productResponseData.setId(Integer.parseInt(productEs.getId()));
+//            //ToDo:Search brand as well
+//            return productResponseData;
+//        }
         Product product = productRepository.findById(Integer.valueOf(id)).orElse(null); //ToDo make query to fetch both brand and product
         if(Objects.nonNull(product)){
             BeanUtils.copyProperties(product, productResponseData);
