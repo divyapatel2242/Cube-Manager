@@ -2,7 +2,7 @@ package com.cube.manage.crm.service;
 
 import com.cube.manage.crm.entity.Customer;
 import com.cube.manage.crm.entity.UserCreds;
-//import com.cube.manage.crm.esrepo.CustomerEsRepository;
+import com.cube.manage.crm.esrepo.CustomerEsRepository;
 import com.cube.manage.crm.esdocument.CustomerEs;
 import com.cube.manage.crm.repository.CustomerCredsRepository;
 import com.cube.manage.crm.repository.CustomerRepository;
@@ -27,8 +27,8 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-//    @Autowired
-//    private CustomerEsRepository customerEsRepository;
+    @Autowired
+    private CustomerEsRepository customerEsRepository;
 
     @Autowired
     private CustomerCredsRepository customerCredsRepository;
@@ -37,16 +37,16 @@ public class CustomerService {
 
     public CustomerDataResponse fetchCustomersResponseService(SearchCustomer searchCustomery){
         CustomerDataResponse customerDataResponse = new CustomerDataResponse();
-//        Iterable<CustomerEs> customerEs = customerEsRepository.findAll();
-//        Iterator<CustomerEs> iterator = customerEs.iterator();
-//        List<CustomerData> customerData = new ArrayList<>();
-//        if (iterator.hasNext()) {
-//            customerData.add(fetchCustomerData(iterator.next()));
-//        }
-//        while (iterator.hasNext()) {
-//            customerData.add(fetchCustomerData(iterator.next()));
-//        }
-//        customerDataResponse.setCustomerData(customerData);
+        Iterable<CustomerEs> customerEs = customerEsRepository.findAll();
+        Iterator<CustomerEs> iterator = customerEs.iterator();
+        List<CustomerData> customerData = new ArrayList<>();
+        if (iterator.hasNext()) {
+            customerData.add(fetchCustomerData(iterator.next()));
+        }
+        while (iterator.hasNext()) {
+            customerData.add(fetchCustomerData(iterator.next()));
+        }
+        customerDataResponse.setCustomerData(customerData);
         return customerDataResponse;
     }
 
@@ -64,7 +64,7 @@ public class CustomerService {
         BeanUtils.copyProperties(customerRequest,customer);
         customerRepository.save(customer);
         customerEs.setId(customer.getId());
-//        customerEsRepository.save(customerEs);
+        customerEsRepository.save(customerEs);
     }
 
     public String registerUser(UserRegisterRequest userRegisterRequest) {

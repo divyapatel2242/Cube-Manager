@@ -3,8 +3,8 @@ package com.cube.manage.crm.service;
 import com.cube.manage.crm.dto.ProductDetailDto;
 import com.cube.manage.crm.entity.Product;
 import com.cube.manage.crm.entity.ProductItem;
-//import com.cube.manage.crm.esrepo.ProductEsRepository;
-//import com.cube.manage.crm.esrepo.ProductItemEsRepository;
+import com.cube.manage.crm.esrepo.ProductEsRepository;
+import com.cube.manage.crm.esrepo.ProductItemEsRepository;
 import com.cube.manage.crm.esdocument.ProductEs;
 import com.cube.manage.crm.esdocument.ProductItemEs;
 import com.cube.manage.crm.repository.ProductDataRepository;
@@ -27,8 +27,8 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-//    @Autowired
-//    private ProductEsRepository productEsRepository;
+    @Autowired
+    private ProductEsRepository productEsRepository;
 
     @Autowired
     private ProductDataRepository productDataRepository;
@@ -36,8 +36,8 @@ public class ProductService {
     @Autowired
     private ProductItemRepository productItemRepository;
 
-//    @Autowired
-//    private ProductItemEsRepository productItemEsRepository;
+    @Autowired
+    private ProductItemEsRepository productItemEsRepository;
 
     @Autowired
     private BrandService brandService;
@@ -64,7 +64,7 @@ public class ProductService {
         ProductEs productEs = new ProductEs();
         productEs.setId(product.getId().toString());
         BeanUtils.copyProperties(product,productEs);
-//        productEsRepository.save(productEs);
+        productEsRepository.save(productEs);
 
     }
 
@@ -81,7 +81,7 @@ public class ProductService {
         ProductEs productEs = new ProductEs();
         productEs.setId(product.getId().toString());
         BeanUtils.copyProperties(product,productEs);
-//        productEsRepository.save(productEs);
+        productEsRepository.save(productEs);
         productRequest.setId(product.getId());
         addProductItemDetails(productRequest);
     }
@@ -104,7 +104,7 @@ public class ProductService {
             BeanUtils.copyProperties(productItem,productItemEs);
             productItemEsList.add(productItemEs);
         }
-//        productItemEsRepository.saveAll(productItemEsList);
+        productItemEsRepository.saveAll(productItemEsList);
     }
 
     public ProductResponseData fetchProductData(String id) {
