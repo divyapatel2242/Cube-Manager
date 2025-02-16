@@ -4,7 +4,7 @@ import com.cube.manage.crm.dbutil.JDBCAccess;
 import com.cube.manage.crm.dto.ProductDetailDto;
 import com.cube.manage.crm.entity.Product;
 //import com.cube.manage.crm.esrepo.ProductEsRepository;
-import com.cube.manage.crm.esdocument.ProductEs;
+//import com.cube.manage.crm.esdocument.ProductEs;
 import com.cube.manage.crm.response.ProductResponseData;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

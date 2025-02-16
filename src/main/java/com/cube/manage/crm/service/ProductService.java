@@ -5,8 +5,8 @@ import com.cube.manage.crm.entity.Product;
 import com.cube.manage.crm.entity.ProductItem;
 //import com.cube.manage.crm.esrepo.ProductEsRepository;
 //import com.cube.manage.crm.esrepo.ProductItemEsRepository;
-import com.cube.manage.crm.esdocument.ProductEs;
-import com.cube.manage.crm.esdocument.ProductItemEs;
+//import com.cube.manage.crm.esdocument.ProductEs;
+//import com.cube.manage.crm.esdocument.ProductItemEs;
 import com.cube.manage.crm.repository.ProductDataRepository;
 import com.cube.manage.crm.repository.ProductItemRepository;
 import com.cube.manage.crm.repository.ProductRepository;
@@ -61,9 +61,9 @@ public class ProductService {
         product.setImgUrl(productRequest.getImgUrl());
         product.setDescription(productRequest.getDescription());
         productRepository.save(product);
-        ProductEs productEs = new ProductEs();
-        productEs.setId(product.getId().toString());
-        BeanUtils.copyProperties(product,productEs);
+//        ProductEs productEs = new ProductEs();
+//        productEs.setId(product.getId().toString());
+//        BeanUtils.copyProperties(product,productEs);
 //        productEsRepository.save(productEs);
 
     }
@@ -78,9 +78,9 @@ public class ProductService {
         product.setRetailPrice(productRequest.getCostPrice());
         product.setMrp(productRequest.getSalePrice());
         productRepository.save(product);
-        ProductEs productEs = new ProductEs();
-        productEs.setId(product.getId().toString());
-        BeanUtils.copyProperties(product,productEs);
+//        ProductEs productEs = new ProductEs();
+//        productEs.setId(product.getId().toString());
+//        BeanUtils.copyProperties(product,productEs);
 //        productEsRepository.save(productEs);
         productRequest.setId(product.getId());
         addProductItemDetails(productRequest);
@@ -98,12 +98,12 @@ public class ProductService {
         }
         productItemRepository.saveAll(productItemList);
 
-        List<ProductItemEs> productItemEsList = new ArrayList<>();
-        for(ProductItem productItem : productItemList){
-            ProductItemEs productItemEs = new ProductItemEs();
-            BeanUtils.copyProperties(productItem,productItemEs);
-            productItemEsList.add(productItemEs);
-        }
+//        List<ProductItemEs> productItemEsList = new ArrayList<>();
+//        for(ProductItem productItem : productItemList){
+//            ProductItemEs productItemEs = new ProductItemEs();
+//            BeanUtils.copyProperties(productItem,productItemEs);
+//            productItemEsList.add(productItemEs);
+//        }
 //        productItemEsRepository.saveAll(productItemEsList);
     }
 

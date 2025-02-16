@@ -3,7 +3,7 @@ package com.cube.manage.crm.service;
 import com.cube.manage.crm.entity.Customer;
 import com.cube.manage.crm.entity.UserCreds;
 //import com.cube.manage.crm.esrepo.CustomerEsRepository;
-import com.cube.manage.crm.esdocument.CustomerEs;
+//import com.cube.manage.crm.esdocument.CustomerEs;
 import com.cube.manage.crm.repository.CustomerCredsRepository;
 import com.cube.manage.crm.repository.CustomerRepository;
 import com.cube.manage.crm.request.CustomerRequest;
@@ -13,7 +13,7 @@ import com.cube.manage.crm.response.CustomerData;
 import com.cube.manage.crm.response.CustomerDataResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class CustomerService {
     @Autowired
     private CustomerCredsRepository customerCredsRepository;
 
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+//    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public CustomerDataResponse fetchCustomersResponseService(SearchCustomer searchCustomery){
         CustomerDataResponse customerDataResponse = new CustomerDataResponse();
@@ -50,20 +50,20 @@ public class CustomerService {
         return customerDataResponse;
     }
 
-    private CustomerData fetchCustomerData(CustomerEs customer){
-        CustomerData customerData = new CustomerData();
-        BeanUtils.copyProperties(customer,customerData);
-        return customerData;
-    }
+//    private CustomerData fetchCustomerData(CustomerEs customer){
+//        CustomerData customerData = new CustomerData();
+//        BeanUtils.copyProperties(customer,customerData);
+//        return customerData;
+//    }
 
     public void addCustomerDetails(CustomerRequest customerRequest) {
-        CustomerEs customerEs = new CustomerEs();
-        BeanUtils.copyProperties(customerRequest,customerEs);
-        customerRequest.setCreatedDate(new Date());
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(customerRequest,customer);
-        customerRepository.save(customer);
-        customerEs.setId(customer.getId());
+//        CustomerEs customerEs = new CustomerEs();
+//        BeanUtils.copyProperties(customerRequest,customerEs);
+//        customerRequest.setCreatedDate(new Date());
+//        Customer customer = new Customer();
+//        BeanUtils.copyProperties(customerRequest,customer);
+//        customerRepository.save(customer);
+//        customerEs.setId(customer.getId());
 //        customerEsRepository.save(customerEs);
     }
 
@@ -77,7 +77,7 @@ public class CustomerService {
         UserCreds userCreds = new UserCreds();
         userCreds.setCustomerId(customer.getId());
         userCreds.setUserName(userRegisterRequest.getUsername());
-        userCreds.setPassword(encoder.encode(userRegisterRequest.getPassword()));
+//        userCreds.setPassword(encoder.encode(userRegisterRequest.getPassword()));
         userCreds.setUserType(userRegisterRequest.getUsertype());
         customerCredsRepository.save(userCreds);
         return userCreds.getUserName();
